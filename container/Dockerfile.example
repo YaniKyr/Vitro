@@ -1,0 +1,15 @@
+# Example inference image. The model server itself is unchanged; guard.py wraps it.
+# NVIDIA: FROM nvcr.io/nvidia/pytorch:<tag>   AMD: FROM rocm/pytorch:<tag>
+ARG BASE=nvcr.io/nvidia/pytorch:24.08-py3
+FROM ${BASE}
+
+RUN pip install --no-cache-dir fastapi uvicorn
+COPY guard.py /opt/gpushare/guard.py
+COPY oom_handling.py /app/server.py
+# smoke_test.py is required by ci/validate_image.sh
+COPY smoke_test.py /app/smoke_test.py
+
+ENV GPUSHARE_STATUS_DIR=/run/gpushare
+EXPOSE 8000
+ENTRYPOINT ["python3", "/opt/gpushare/guard.py", "--"]
+CMD ["uvicorn", "server:app", "--app-dir", "/app", "--host", "0.0.0.0", "--port", "8000"]

@@ -1,0 +1,17 @@
+{
+  "workload_id": "llm-a-001",
+  "image": "registry.local/infer/llama-8b:1.4",
+  "image_digest": "registry.local/infer/llama-8b@sha256:<digest>",
+  "compute_share": 0.25,
+  "mem_bytes": 12884901888,
+  "isolation": "shared",
+  "port": 8000,
+  "infer_path": "/infer",
+  "env": {
+    "MODEL_PATH": "/models/model.pt",
+    "MAX_BATCH": "32"
+  },
+  "volumes": {
+    "/srv/models/llama-8b": "/models"
+  }
+}
