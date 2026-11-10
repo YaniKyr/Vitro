@@ -1,4 +1,4 @@
-<h1><img src="https://cdn-icons-png.flaticon.com/512/6621/6621761.png" width="40" align="top" alt=""> Vitro</h1>
+<h1><img src="https://cdn-icons-png.flaticon.com/512/15271/15271834.png" width="44" align="top" alt=""> Vitro</h1>
 
 **Reinventing model serving by slicing one GPU among many models: fine-grained, fault-aware sharing on NVIDIA (MPS) and AMD (CU masking).**
 
@@ -33,13 +33,12 @@ for both.
 - [Inference container contract](#-inference-container-contract)
 - [Configuration](#-configuration)
 - [Testing](#-testing)
-- [Limitations](#-limitations)
 - [Documentation](#-documentation)
 - [Icon credits](#icon-credits)
 
 ---
 
-## <img src="https://cdn-icons-png.flaticon.com/512/6621/6621716.png" width="26" align="top" alt=""> Why
+## <img src="https://cdn-icons-png.flaticon.com/512/6621/6621420.png" width="26" align="top" alt=""> Why
 
 A single inference model rarely needs a whole GPU, but giving each model its own GPU is the default. Sharing a GPU
 between models raises three problems:
@@ -58,7 +57,7 @@ request on the same node state always lands on the same GPU.
 
 ---
 
-## <img src="https://cdn-icons-png.flaticon.com/512/6621/6621449.png" width="26" align="top" alt=""> The name
+## <img src="https://cdn-icons-png.flaticon.com/512/15271/15271834.png" width="26" align="top" alt=""> The name
 
 *Vitro* is Latin for glass, and the project borrows two images from it.
 
@@ -70,7 +69,7 @@ request on the same node state always lands on the same GPU.
   share a GPU with other workloads in production.
 
 The name describes the validation step and the slicing, not the strength of isolation on a shared GPU, which is
-limited (see [Limitations](#-limitations)). Internal identifiers (Docker network, container labels, state paths) still
+limited. Internal identifiers (Docker network, container labels, state paths) still
 use the earlier working name `gpushare`.
 
 ---
@@ -109,7 +108,7 @@ their APIs.
 
 ---
 
-## <img src="https://cdn-icons-png.flaticon.com/512/6621/6621584.png" width="26" align="top" alt=""> How a workload runs
+## <img src="https://cdn-icons-png.flaticon.com/512/6621/6621625.png" width="26" align="top" alt=""> How a workload runs
 
 1. **Validate the image.** `POST /images/validate` runs the image's `/app/smoke_test.py` on the validation GPU under a
    memory checker. A clean run adds the image digest to the approved list.
@@ -132,7 +131,7 @@ Limits are fixed when a container starts. Changing a workload's slice means rest
 
 ---
 
-## <img src="https://cdn-icons-png.flaticon.com/512/6621/6621670.png" width="26" align="top" alt=""> NVIDIA and AMD
+## <img src="https://cdn-icons-png.flaticon.com/512/6621/6621716.png" width="26" align="top" alt=""> NVIDIA and AMD
 
 | | NVIDIA | AMD |
 |---|---|---|
@@ -176,7 +175,7 @@ reloaded from disk and the only state carried over is the request journal.
 
 ---
 
-## <img src="https://cdn-icons-png.flaticon.com/512/6621/6621526.png" width="26" align="top" alt=""> Repository layout
+## <img src="https://cdn-icons-png.flaticon.com/512/6621/6621461.png" width="26" align="top" alt=""> Repository layout
 
 ```
 gpushare/
@@ -219,7 +218,7 @@ gpushare/
 
 ---
 
-## <img src="https://cdn-icons-png.flaticon.com/512/6621/6621597.png" width="26" align="top" alt=""> Requirements
+## <img src="https://cdn-icons-png.flaticon.com/512/6621/6621498.png" width="26" align="top" alt=""> Requirements
 
 | | NVIDIA | AMD |
 |---|---|---|
@@ -234,7 +233,7 @@ contains no CUDA or ROCm libraries.
 
 ---
 
-## <img src="https://cdn-icons-png.flaticon.com/512/6621/6621625.png" width="26" align="top" alt=""> Quick start
+## <img src="https://cdn-icons-png.flaticon.com/512/6621/6621611.png" width="26" align="top" alt=""> Quick start
 
 ### NVIDIA
 
@@ -282,7 +281,7 @@ socket is equivalent to root on the host, so do not expose the API outside a tru
 
 ---
 
-## <img src="https://cdn-icons-png.flaticon.com/512/6621/6621684.png" width="26" align="top" alt=""> API
+## <img src="https://cdn-icons-png.flaticon.com/512/6621/6621670.png" width="26" align="top" alt=""> API
 
 Interactive documentation is served at `http://<node>:8080/docs`.
 
@@ -303,7 +302,7 @@ Workload status values: `starting`, `ready`, `unhealthy`, `recovering`, `dropped
 
 ---
 
-## <img src="https://cdn-icons-png.flaticon.com/512/6621/6621498.png" width="26" align="top" alt=""> Workload request
+## <img src="https://cdn-icons-png.flaticon.com/512/6621/6621526.png" width="26" align="top" alt=""> Workload request
 
 ```json
 {
@@ -334,7 +333,7 @@ Workload status values: `starting`, `ready`, `unhealthy`, `recovering`, `dropped
 
 ---
 
-## <img src="https://cdn-icons-png.flaticon.com/512/6621/6621461.png" width="26" align="top" alt=""> Inference container contract
+## <img src="https://cdn-icons-png.flaticon.com/512/6621/6621761.png" width="26" align="top" alt=""> Inference container contract
 
 Any inference image works if it:
 
@@ -351,7 +350,7 @@ shows a complete image.
 
 ---
 
-## <img src="https://cdn-icons-png.flaticon.com/512/6621/6621747.png" width="26" align="top" alt=""> Configuration
+## <img src="https://cdn-icons-png.flaticon.com/512/6621/6621597.png" width="26" align="top" alt=""> Configuration
 
 IWMR environment variables (set by `deploy/run_runtime.sh` or passed with `-e`):
 
@@ -371,7 +370,7 @@ IWMR environment variables (set by `deploy/run_runtime.sh` or passed with `-e`):
 
 ---
 
-## <img src="https://cdn-icons-png.flaticon.com/512/6621/6621731.png" width="26" align="top" alt=""> Testing
+## <img src="https://cdn-icons-png.flaticon.com/512/6621/6621747.png" width="26" align="top" alt=""> Testing
 
 The scripts in `tests/` talk to the GPU driver directly through ctypes, so they need neither PyTorch nor a CUDA or
 ROCm toolkit. Run them in this order on the testbed:
@@ -395,26 +394,6 @@ them, and these differ between CUDA and ROCm versions.
 
 ---
 
-## <img src="https://cdn-icons-png.flaticon.com/512/6621/6621569.png" width="26" align="top" alt=""> Limitations
-
-- **No bandwidth isolation.** Memory bandwidth and caches are shared on both vendors and best-fit placement does not
-  account for them.
-- **One IWMR per node, state in memory.** If the IWMR restarts, it removes its workload containers and starts clean;
-  in-flight requests are lost and clients must retry.
-- **Privileged runtime.** The IWMR holds the Docker socket and the host process namespace. The API has no
-  authentication yet.
-- **Culprit detection on NVIDIA** relies mainly on the error text of the failing process; the kernel log often names
-  the MPS server rather than the client. A culprit that dies without a recognisable message is treated as a victim if
-  it is part of an incident.
-- **AMD memory cap coverage.** `hipMallocManaged`, `hipExtMallocWithFlags`, `hipMallocPitch` and functions resolved
-  through `hipGetProcAddress` bypass `libhipmemcap.so`. Confirm T4 with the framework you actually use.
-- **AMD CU layout.** On multi-die GPUs (MI300), the mapping from CU index to die must be checked before relying on the
-  backend's die-local ranges.
-- **Kernel hangs** trigger a GPU reset on both vendors, which ends every process on that GPU.
-- **Static slices.** A running workload cannot be resized; it is restarted with the new slice.
-
----
-
 ## <img src="https://cdn-icons-png.flaticon.com/512/6621/6621655.png" width="26" align="top" alt=""> Documentation
 
 - [`docs/GPU_Sharing_Architecture_Overview.pdf`](docs/GPU_Sharing_Architecture_Overview.pdf): components, how they fit
@@ -426,22 +405,23 @@ them, and these differ between CUDA and ROCm versions.
 
 ## Icon credits
 
-Section icons are from the **Data Center** pack by [surang](https://www.flaticon.com/authors/surang) on
-[Flaticon](https://www.flaticon.com/packs/data-center), free for personal and commercial use with attribution.
-Icons used: [Server](https://www.flaticon.com/free-icon/server_6621761),
-[Processor](https://www.flaticon.com/free-icon/processor_6621716),
-[Centralized](https://www.flaticon.com/free-icon/centralized_6621473),
-[Funnel](https://www.flaticon.com/free-icon/funnel_6621584),
-[Network switch](https://www.flaticon.com/free-icon/network-switch_6621670),
-[Building](https://www.flaticon.com/free-icon/building_6621449),
+Icons from [Flaticon](https://www.flaticon.com), free for personal and commercial use with attribution.
+
+- Title and "The name": [Stained glass](https://www.flaticon.com/free-icon/stained-glass_15271834) by amonrat
+  rungreangfangsai.
+- Section icons: the **Data Center** pack by [surang](https://www.flaticon.com/authors/surang)
+  ([pack](https://www.flaticon.com/packs/data-center)):
 [Alert](https://www.flaticon.com/free-icon/alert_6621409),
+[Analytic](https://www.flaticon.com/free-icon/analytic_6621420),
+[Cabinets](https://www.flaticon.com/free-icon/cabinets_6621461),
+[Centralized](https://www.flaticon.com/free-icon/centralized_6621473),
+[Computer](https://www.flaticon.com/free-icon/computer_6621498),
 [Database](https://www.flaticon.com/free-icon/database_6621526),
 [Gear](https://www.flaticon.com/free-icon/gear_6621597),
+[Generator](https://www.flaticon.com/free-icon/generator_6621611),
 [Hosting](https://www.flaticon.com/free-icon/hosting_6621625),
-[Online](https://www.flaticon.com/free-icon/online_6621684),
-[Computer](https://www.flaticon.com/free-icon/computer_6621498),
-[Cabinets](https://www.flaticon.com/free-icon/cabinets_6621461),
+[Monitor](https://www.flaticon.com/free-icon/monitor_6621655),
+[Network switch](https://www.flaticon.com/free-icon/network-switch_6621670),
+[Processor](https://www.flaticon.com/free-icon/processor_6621716),
 [Search](https://www.flaticon.com/free-icon/search_6621747),
-[Safety](https://www.flaticon.com/free-icon/safety_6621731),
-[Firewall](https://www.flaticon.com/free-icon/firewall_6621569),
-[Monitor](https://www.flaticon.com/free-icon/monitor_6621655).
+[Server](https://www.flaticon.com/free-icon/server_6621761).
