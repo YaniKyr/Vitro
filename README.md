@@ -1,4 +1,4 @@
-<h1><img src="https://cdn-icons-png.flaticon.com/512/15271/15271834.png" width="44" align="top" alt=""> Vitro</h1>
+<h1><img src="https://cdn-icons-png.flaticon.com/512/1156/1156503.png" width="44" align="top" alt=""> Vitro</h1>
 
 **Reinventing model serving by slicing one GPU among many models: fine-grained, fault-aware sharing on NVIDIA (MPS) and AMD (CU masking).**
 
@@ -57,7 +57,7 @@ request on the same node state always lands on the same GPU.
 
 ---
 
-## <img src="https://cdn-icons-png.flaticon.com/512/15271/15271834.png" width="26" align="top" alt=""> The name
+## <img src="https://cdn-icons-png.flaticon.com/512/1156/1156503.png" width="26" align="top" alt=""> The name
 
 *Vitro* is Latin for glass, and the project borrows two images from it.
 
@@ -407,8 +407,7 @@ them, and these differ between CUDA and ROCm versions.
 
 Icons from [Flaticon](https://www.flaticon.com), free for personal and commercial use with attribution.
 
-- Title and "The name": [Stained glass](https://www.flaticon.com/free-icon/stained-glass_15271834) by amonrat
-  rungreangfangsai.
+- Title and "The name": [Mosaic](https://www.flaticon.com/free-icon/mosaic_1156503) by Magnific.
 - Section icons: the **Data Center** pack by [surang](https://www.flaticon.com/authors/surang)
   ([pack](https://www.flaticon.com/packs/data-center)):
 [Alert](https://www.flaticon.com/free-icon/alert_6621409),
