@@ -1,8 +1,8 @@
-<h1><img src="https://cdn-icons-png.flaticon.com/512/6621/6621761.png" width="40" align="top" alt=""> Partita</h1>
+<h1><img src="https://cdn-icons-png.flaticon.com/512/6621/6621761.png" width="40" align="top" alt=""> Vitro</h1>
 
-**Fine-grained GPU sharing for containerised inference, on NVIDIA and AMD.**
+**Reinventing model serving by slicing one GPU among many models: fine-grained, fault-aware sharing on NVIDIA (MPS) and AMD (CU masking).**
 
-Partita runs several inference models in Docker containers on the same physical GPU. Each container gets a fixed
+Vitro runs several inference models in Docker containers on the same physical GPU. Each container gets a fixed
 slice of the GPU (a compute share and a memory cap). Everything that manages those containers runs in one container
 per GPU node, the **Inference Workload Management Runtime (IWMR)**: it admits and places workloads, starts them with
 the right limits, routes inference requests to them, notices when they fail, and recovers them.
@@ -20,6 +20,7 @@ for both.
 ## Contents
 
 - [Why](#-why)
+- [The name](#-the-name)
 - [Architecture](#-architecture)
 - [How a workload runs](#-how-a-workload-runs)
 - [NVIDIA and AMD](#-nvidia-and-amd)
@@ -48,7 +49,7 @@ between models raises three problems:
    GPU error in one model ends every model on that GPU.
 3. **Someone has to manage it.** Placement, limits, restarts and request handling must happen without an operator.
 
-Partita addresses these with ceilings enforced by the vendor's sharing mechanism, a capacity ledger that turns those
+Vitro addresses these with ceilings enforced by the vendor's sharing mechanism, a capacity ledger that turns those
 ceilings into effective reservations, validation of images before they may share a GPU, and a recovery controller
 that drops the workload that caused a fault and brings back the ones that were only affected by it.
 
@@ -57,9 +58,26 @@ request on the same node state always lands on the same GPU.
 
 ---
 
+## <img src="https://cdn-icons-png.flaticon.com/512/6621/6621449.png" width="26" align="top" alt=""> The name
+
+*Vitro* is Latin for glass, and the project borrows two images from it.
+
+- **Stained glass.** A stained-glass window is one pane cut into pieces and held in place by lead strips. Vitro cuts
+  one GPU into slices, and the IWMR plays the lead: the admission ledger keeps the slices on a GPU from adding up to
+  more than the whole.
+- **In vitro before in vivo.** Experiments run in glass, under controlled conditions, before they run in a living
+  system. Every image runs its smoke test on the validation GPU, under a memory checker, before it is allowed to
+  share a GPU with other workloads in production.
+
+The name describes the validation step and the slicing, not the strength of isolation on a shared GPU, which is
+limited (see [Limitations](#-limitations)). Internal identifiers (Docker network, container labels, state paths) still
+use the earlier working name `gpushare`.
+
+---
+
 ## <img src="https://cdn-icons-png.flaticon.com/512/6621/6621473.png" width="26" align="top" alt=""> Architecture
 
-![Partita architecture: one GPU node with the IWMR container, host services, inference containers and GPUs](docs/architecture.png)
+![Vitro architecture: one GPU node with the IWMR container, host services, inference containers and GPUs](docs/architecture.png)
 
 One GPU node contains:
 
@@ -415,6 +433,7 @@ Icons used: [Server](https://www.flaticon.com/free-icon/server_6621761),
 [Centralized](https://www.flaticon.com/free-icon/centralized_6621473),
 [Funnel](https://www.flaticon.com/free-icon/funnel_6621584),
 [Network switch](https://www.flaticon.com/free-icon/network-switch_6621670),
+[Building](https://www.flaticon.com/free-icon/building_6621449),
 [Alert](https://www.flaticon.com/free-icon/alert_6621409),
 [Database](https://www.flaticon.com/free-icon/database_6621526),
 [Gear](https://www.flaticon.com/free-icon/gear_6621597),
