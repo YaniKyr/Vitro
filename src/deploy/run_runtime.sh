@@ -2,6 +2,8 @@
 # run_runtime.sh - start the Inference Workload Management Runtime on this node.
 #   sudo VENDOR=nvidia VALIDATION_GPU=3 ./deploy/run_runtime.sh
 #   sudo VENDOR=amd ./deploy/run_runtime.sh
+# With CALIB_MODEL=<onnx file> the per-container GPU metrics are verified on
+# every shared GPU first (iwmr/calibrate.py), while the node is still idle.
 # Every path mounted below is identical on host and in the runtime, because the
 # runtime starts sibling containers through the host's Docker daemon.
 set -euo pipefail
@@ -12,6 +14,15 @@ PORT=${PORT:-8080}
 
 docker network inspect gpushare >/dev/null 2>&1 || docker network create gpushare
 mkdir -p /var/lib/gpushare
+
+# Metrics check before the runtime starts. A failure does not stop the runtime:
+# limits are enforced by MPS; the metrics of that GPU are only left unverified.
+HERE="$(cd "$(dirname "$0")" && pwd)"
+if [ "$VENDOR" = nvidia ] && [ -n "${CALIB_MODEL:-}" ]; then
+  VALIDATION_GPU="${VALIDATION_GPU:-}" python3 "$HERE/../iwmr/calibrate.py" --all \
+    --model "$CALIB_MODEL" --image "${CALIB_IMAGE:-onnx-infer:latest}" \
+    || echo "WARN: GPU metrics not verified on every GPU (see /var/lib/gpushare/calibration)"
+fi
 
 COMMON=(
   -d --name iwmr --restart unless-stopped
