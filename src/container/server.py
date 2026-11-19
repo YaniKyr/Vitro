@@ -22,6 +22,10 @@ Environment:
   GPU_MEM_LIMIT_MB  cap on ONNX Runtime's GPU arena  (default: no cap)
                     Keep it below the MPS memory limit of the container: the
                     CUDA context and the CUDA/cuDNN libraries also use memory.
+
+The MPS limits of the container (SMs, GPU memory) are not set here. They come
+from the MPS namespace that entrypoint.sh connects the container to; /health
+reports which one, and /metrics what the limits turned out to be.
 """
 import ctypes, os, sys
 
@@ -36,6 +40,9 @@ import vitro_stats
 MODEL_PATH = os.environ.get("MODEL_PATH", "/models/model.onnx")
 PORT = int(os.environ.get("PORT", "8000"))
 GPU_MEM_LIMIT_MB = int(os.environ.get("GPU_MEM_LIMIT_MB", "0"))
+MPS = {"pipe_directory": os.environ.get("CUDA_MPS_PIPE_DIRECTORY"),
+       "namespace": os.environ.get("VITRO_MPS_NAMESPACE"),
+       "mem_cap": os.environ.get("VITRO_MEM_CAP")}
 
 DTYPES = {"tensor(float)": np.float32, "tensor(double)": np.float64, "tensor(float16)": np.float16,
           "tensor(int64)": np.int64, "tensor(int32)": np.int32, "tensor(uint8)": np.uint8,
@@ -81,6 +88,7 @@ app = FastAPI(title="ONNX inference server")
 def health():
     return {"ok": True, "model": MODEL_PATH, "providers": session.get_providers(),
             "observer": observer is not None,
+            "mps": MPS,
             "inputs": {n: {"shape": i.shape, "type": i.type} for n, i in inputs.items()}}
 
 

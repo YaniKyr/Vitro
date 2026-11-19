@@ -10,8 +10,13 @@ Environment=CUDA_VISIBLE_DEVICES=%i
 Environment=CUDA_MPS_PIPE_DIRECTORY=/var/run/nvidia-mps/gpu%i
 Environment=CUDA_MPS_LOG_DIRECTORY=/var/log/nvidia-mps/gpu%i
 ExecStartPre=/bin/mkdir -p /var/run/nvidia-mps/gpu%i /var/log/nvidia-mps/gpu%i
+# Protocol 3 (namespaces, SM partitions) where the driver's control binary offers
+# it; an older binary ignores the variable and runs the legacy protocol 2.
+# deploy/mps_version.sh reports which one a node ended up with.
+Environment=CUDA_MPS_PROTOCOL_VERSION=3
 ExecStart=/usr/bin/nvidia-cuda-mps-control -d
-ExecStop=/bin/sh -c 'echo quit | /usr/bin/nvidia-cuda-mps-control'
+# A protocol 3 daemon is stopped with -q, a legacy one with the "quit" command.
+ExecStop=/bin/sh -c 'if /usr/bin/nvidia-cuda-mps-control device list >/dev/null 2>&1; then exec /usr/bin/nvidia-cuda-mps-control -q; fi; echo quit | /usr/bin/nvidia-cuda-mps-control'
 Restart=on-failure
 
 [Install]

@@ -1,8 +1,3 @@
-# Inference container: supervisord runs the ONNX Runtime server and guard.py.
-# The server runs with libvitroobs.so preloaded (per-container GPU metrics).
-# Build from src/:
-#   docker build -f container/Dockerfile -t onnx-infer:latest .
-# The model is not part of the image; mount it read-only at /models/model.onnx.
 FROM python:3.12-slim AS observer
 RUN apt-get update && apt-get install -y --no-install-recommends gcc libc6-dev \
     && rm -rf /var/lib/apt/lists/*
@@ -16,7 +11,7 @@ FROM python:3.12-slim
 # run time by the NVIDIA container toolkit.
 RUN pip install --no-cache-dir "onnxruntime-gpu[cuda,cudnn]" numpy fastapi uvicorn supervisor
 
-COPY container/server.py container/guard.py container/vitro_stats.py /app/
+COPY container/server.py container/guard.py container/vitro_stats.py container/entrypoint.sh /app/
 COPY --from=observer /libvitroobs.so /opt/vitro/libvitroobs.so
 COPY container/supervisord.conf /etc/supervisord.conf
 
@@ -27,4 +22,6 @@ ENV PYTHONUNBUFFERED=1 \
     PORT=8000
 RUN mkdir -p /run/vitro
 EXPOSE 8000
+# entrypoint.sh connects the container to its MPS namespace (see the file).
+ENTRYPOINT ["/app/entrypoint.sh"]
 CMD ["supervisord", "-c", "/etc/supervisord.conf"]

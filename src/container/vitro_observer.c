@@ -359,18 +359,29 @@ static void stop_worker(void)
     pthread_join(g_thread, NULL);
 }
 
-static uint64_t mem_cap_from_env(void)
+static uint64_t parse_size(const char *v)                  /* "2G", "512M", "1024K" or bytes */
 {
-    const char *v = getenv("VITRO_MEM_CAP_BYTES");
-    if (v && *v) return strtoull(v, NULL, 10);
-    v = getenv("CUDA_MPS_PINNED_DEVICE_MEM_LIMIT");          /* "0=2G" or "0=512M" */
-    if (!v || !(v = strchr(v, '='))) return 0;
     char *end;
-    double n = strtod(v + 1, &end);
+    double n = strtod(v, &end);
     if (*end == 'G' || *end == 'g') n *= 1024.0 * 1024 * 1024;
     else if (*end == 'M' || *end == 'm') n *= 1024.0 * 1024;
     else if (*end == 'K' || *end == 'k') n *= 1024.0;
-    return (uint64_t)n;
+    return n > 0 ? (uint64_t)n : 0;
+}
+
+/* The memory limit of this client. The driver does not report it: cuMemGetInfo
+ * gives the free memory under the limit, but the total of the whole GPU. With a
+ * limit set in the environment it is read from there; with a limit that belongs
+ * to an MPS v3 namespace whoever starts the container passes it in VITRO_MEM_CAP. */
+static uint64_t mem_cap_from_env(void)
+{
+    const char *v = getenv("VITRO_MEM_CAP");
+    if (v && *v) return parse_size(v);
+    v = getenv("VITRO_MEM_CAP_BYTES");
+    if (v && *v) return strtoull(v, NULL, 10);
+    v = getenv("CUDA_MPS_PINNED_DEVICE_MEM_LIMIT");          /* "0=2G" or "0=512M" */
+    if (!v || !(v = strchr(v, '='))) return 0;
+    return parse_size(v + 1);
 }
 
 static void open_stats(void)
